@@ -1,8 +1,8 @@
 """LM Studio provider implementation."""
 
+from config.provider_catalog import LMSTUDIO_DEFAULT_BASE
 from providers.anthropic_messages import AnthropicMessagesTransport
 from providers.base import ProviderConfig
-from providers.defaults import LMSTUDIO_DEFAULT_BASE
 from providers.rate_limit import ProviderRateLimiter
 
 

@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from config.nim import NimSettings
-from config.provider_ids import SUPPORTED_PROVIDER_IDS
+from config.provider_catalog import PROVIDER_CATALOG, SUPPORTED_PROVIDER_IDS
 from providers.deepseek import DeepSeekProvider
 from providers.exceptions import UnknownProviderTypeError
 from providers.llamacpp import LlamaCppProvider
@@ -14,7 +14,6 @@ from providers.nvidia_nim import NvidiaNimProvider
 from providers.ollama import OllamaProvider
 from providers.open_router import OpenRouterProvider
 from providers.registry import (
-    PROVIDER_DESCRIPTORS,
     ProviderRegistry,
     create_provider,
 )
@@ -64,15 +63,15 @@ def test_importing_registry_does_not_eager_load_other_adapters() -> None:
 
 
 def test_descriptors_cover_advertised_provider_ids():
-    assert set(PROVIDER_DESCRIPTORS) == set(SUPPORTED_PROVIDER_IDS)
-    for descriptor in PROVIDER_DESCRIPTORS.values():
+    assert set(PROVIDER_CATALOG) == set(SUPPORTED_PROVIDER_IDS)
+    for descriptor in PROVIDER_CATALOG.values():
         assert descriptor.provider_id
         assert descriptor.transport_type in {"openai_chat", "anthropic_messages"}
         assert descriptor.capabilities
 
 
 def test_ollama_descriptor_uses_native_anthropic_transport():
-    descriptor = PROVIDER_DESCRIPTORS["ollama"]
+    descriptor = PROVIDER_CATALOG["ollama"]
 
     assert descriptor.transport_type == "anthropic_messages"
     assert descriptor.default_base_url == "http://localhost:11434"

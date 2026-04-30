@@ -1,6 +1,6 @@
 """Ollama provider package."""
 
-from providers.defaults import OLLAMA_DEFAULT_BASE
+from config.provider_catalog import OLLAMA_DEFAULT_BASE
 
 from .client import OllamaProvider
 

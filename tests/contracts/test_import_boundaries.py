@@ -56,11 +56,19 @@ def test_core_does_not_import_product_packages() -> None:
 
 def test_provider_catalog_is_single_source_for_supported_ids() -> None:
     from config.provider_catalog import PROVIDER_CATALOG, SUPPORTED_PROVIDER_IDS
-    from providers.registry import PROVIDER_DESCRIPTORS, PROVIDER_FACTORIES
+    from providers.registry import PROVIDER_FACTORIES
 
     assert tuple(PROVIDER_CATALOG.keys()) == SUPPORTED_PROVIDER_IDS
-    assert PROVIDER_DESCRIPTORS is PROVIDER_CATALOG
     assert set(SUPPORTED_PROVIDER_IDS) == set(PROVIDER_FACTORIES)
+
+
+def test_compatibility_shim_modules_stay_removed() -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+
+    assert not (repo_root / "api" / "web_server_tools.py").exists()
+    assert not (repo_root / "providers" / "defaults.py").exists()
+    assert not (repo_root / "config" / "provider_ids.py").exists()
+    assert _text_occurrences(repo_root, "PROVIDER" + "_DESCRIPTORS") == []
 
 
 def test_config_does_not_import_non_config_packages() -> None:

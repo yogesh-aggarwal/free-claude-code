@@ -62,12 +62,11 @@ helpers live in `core/anthropic/stream_contracts.py`; live smoke imports that
 module directly (no dedicated smoke SSE shim). NVIDIA NIM chat tuning uses the
 canonical `config.nim.NimSettings` model on `Settings`; `providers.registry`
 passes `settings.nim` into `NvidiaNimProvider` without a duplicate schema.
-Default upstream base URLs use a single constant per endpoint in
-`providers/defaults.py` (e.g. `NVIDIA_NIM_DEFAULT_BASE`). Process-cached provider
-helpers (`api.dependencies.get_provider` / `get_provider_for_type`) exist for
-scripts and unit tests; production HTTP handlers must use `resolve_provider` with
+Default upstream base URLs and supported provider IDs live in
+`config.provider_catalog`. HTTP handlers use `resolve_provider` with
 `request.app` so the app-scoped `ProviderRegistry` is used. The `api` package
-`__all__` exposes HTTP models and `create_app` only (not `app`, not those helpers).
+`__all__` exposes HTTP models and `create_app` only (not `app`, not dependency
+helpers).
 `api.app:create_app` is the ASGI factory (e.g. `uvicorn api.app:create_app --factory`);
 `server.py` still exposes `server:app` as a module-level instance for convenience.
 

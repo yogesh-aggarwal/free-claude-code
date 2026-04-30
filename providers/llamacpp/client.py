@@ -1,8 +1,8 @@
 """Llama.cpp provider implementation."""
 
+from config.provider_catalog import LLAMACPP_DEFAULT_BASE
 from providers.anthropic_messages import AnthropicMessagesTransport
 from providers.base import ProviderConfig
-from providers.defaults import LLAMACPP_DEFAULT_BASE
 from providers.rate_limit import ProviderRateLimiter
 
 

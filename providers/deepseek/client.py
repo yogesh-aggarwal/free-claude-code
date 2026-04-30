@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import Any
 
+from config.provider_catalog import DEEPSEEK_ANTHROPIC_DEFAULT_BASE
 from providers.anthropic_messages import AnthropicMessagesTransport
 from providers.base import ProviderConfig
-from providers.defaults import DEEPSEEK_ANTHROPIC_DEFAULT_BASE
 from providers.rate_limit import ProviderRateLimiter
 
 from .request import build_request_body

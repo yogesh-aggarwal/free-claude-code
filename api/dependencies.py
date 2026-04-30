@@ -4,6 +4,7 @@ from fastapi import Depends, HTTPException, Request
 from loguru import logger
 from starlette.applications import Starlette
 
+from config.provider_catalog import PROVIDER_CATALOG
 from config.settings import Settings
 from core.anthropic import get_user_facing_error_message
 from providers.base import BaseProvider
@@ -12,7 +13,7 @@ from providers.exceptions import (
     ServiceUnavailableError,
     UnknownProviderTypeError,
 )
-from providers.registry import PROVIDER_DESCRIPTORS, ProviderRegistry
+from providers.registry import ProviderRegistry
 
 
 def get_request_settings(request: Request) -> Settings:
@@ -62,7 +63,7 @@ def _resolve_with_registry(
         logger.error(
             "Unknown provider_type: '{}'. Supported: {}",
             provider_type,
-            ", ".join(f"'{key}'" for key in PROVIDER_DESCRIPTORS),
+            ", ".join(f"'{key}'" for key in PROVIDER_CATALOG),
         )
         raise
     if should_log_init:

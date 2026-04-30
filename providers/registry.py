@@ -18,9 +18,6 @@ ProviderFactory = Callable[
     [ProviderConfig, Settings, ProviderRateLimiter], BaseProvider
 ]
 
-# Backwards-compatible name for the catalog (single source: ``config.provider_catalog``).
-PROVIDER_DESCRIPTORS: dict[str, ProviderDescriptor] = PROVIDER_CATALOG
-
 
 def _create_nvidia_nim(
     config: ProviderConfig, settings: Settings, rate_limiter: ProviderRateLimiter
@@ -81,12 +78,12 @@ PROVIDER_FACTORIES: dict[str, ProviderFactory] = {
     "ollama": _create_ollama,
 }
 
-if set(PROVIDER_DESCRIPTORS) != set(SUPPORTED_PROVIDER_IDS) or set(
+if set(PROVIDER_CATALOG) != set(SUPPORTED_PROVIDER_IDS) or set(
     PROVIDER_FACTORIES
 ) != set(SUPPORTED_PROVIDER_IDS):
     raise AssertionError(
-        "PROVIDER_DESCRIPTORS, PROVIDER_FACTORIES, and SUPPORTED_PROVIDER_IDS are out of sync: "
-        f"descriptors={set(PROVIDER_DESCRIPTORS)!r} factories={set(PROVIDER_FACTORIES)!r} "
+        "PROVIDER_CATALOG, PROVIDER_FACTORIES, and SUPPORTED_PROVIDER_IDS are out of sync: "
+        f"catalog={set(PROVIDER_CATALOG)!r} factories={set(PROVIDER_FACTORIES)!r} "
         f"ids={set(SUPPORTED_PROVIDER_IDS)!r}"
     )
 
@@ -148,9 +145,9 @@ def create_provider(
     *,
     rate_limiter: ProviderRateLimiter | None = None,
 ) -> BaseProvider:
-    descriptor = PROVIDER_DESCRIPTORS.get(provider_id)
+    descriptor = PROVIDER_CATALOG.get(provider_id)
     if descriptor is None:
-        supported = "', '".join(PROVIDER_DESCRIPTORS)
+        supported = "', '".join(PROVIDER_CATALOG)
         raise UnknownProviderTypeError(
             f"Unknown provider_type: '{provider_id}'. Supported: '{supported}'"
         )
@@ -184,9 +181,9 @@ class ProviderRegistry:
 
     def get(self, provider_id: str, settings: Settings) -> BaseProvider:
         if provider_id not in self._providers:
-            descriptor = PROVIDER_DESCRIPTORS.get(provider_id)
+            descriptor = PROVIDER_CATALOG.get(provider_id)
             if descriptor is None:
-                supported = "', '".join(PROVIDER_DESCRIPTORS)
+                supported = "', '".join(PROVIDER_CATALOG)
                 raise UnknownProviderTypeError(
                     f"Unknown provider_type: '{provider_id}'. Supported: '{supported}'"
                 )

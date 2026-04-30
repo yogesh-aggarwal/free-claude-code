@@ -11,7 +11,7 @@ from typing import Literal
 
 TransportType = Literal["openai_chat", "anthropic_messages"]
 
-# Default upstream base URLs (also re-exported via :mod:`providers.defaults`)
+# Default upstream base URLs.
 NVIDIA_NIM_DEFAULT_BASE = "https://integrate.api.nvidia.com/v1"
 # DeepSeek Anthropic-compatible Messages API (not OpenAI ``/v1`` chat completions).
 DEEPSEEK_ANTHROPIC_DEFAULT_BASE = "https://api.deepseek.com/anthropic"

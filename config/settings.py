@@ -11,7 +11,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .constants import HTTP_CONNECT_TIMEOUT_DEFAULT
 from .nim import NimSettings
-from .provider_ids import SUPPORTED_PROVIDER_IDS
+from .provider_catalog import SUPPORTED_PROVIDER_IDS
 
 
 def _env_files() -> tuple[Path, ...]:

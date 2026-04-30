@@ -18,7 +18,7 @@ from typing import Any
 import httpx
 import pytest
 
-from config.provider_ids import SUPPORTED_PROVIDER_IDS
+from config.provider_catalog import SUPPORTED_PROVIDER_IDS
 from core.anthropic.stream_contracts import (
     SSEEvent,
     assert_anthropic_stream_contract,

@@ -2,9 +2,9 @@
 
 import httpx
 
+from config.provider_catalog import OLLAMA_DEFAULT_BASE
 from providers.anthropic_messages import AnthropicMessagesTransport
 from providers.base import ProviderConfig
-from providers.defaults import OLLAMA_DEFAULT_BASE
 from providers.rate_limit import ProviderRateLimiter
 
 

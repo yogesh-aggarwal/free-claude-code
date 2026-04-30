@@ -5,9 +5,10 @@ import subprocess
 
 import pytest
 
+from config.provider_catalog import PROVIDER_CATALOG
 from config.settings import Settings
 from messaging.platforms.factory import create_messaging_platform
-from providers.registry import PROVIDER_DESCRIPTORS, build_provider_config
+from providers.registry import build_provider_config
 from smoke.lib.child_process import cmd_free_claude_code_serve, cmd_python_c
 from smoke.lib.config import SmokeConfig
 from smoke.lib.e2e import SmokeServerDriver
@@ -113,8 +114,9 @@ def test_proxy_timeout_config_e2e(smoke_config: SmokeConfig, tmp_path) -> None:
     env["FCC_ENV_FILE"] = str(env_file)
     script = (
         "from config.settings import Settings; "
-        "from providers.registry import PROVIDER_DESCRIPTORS, build_provider_config; "
-        "s=Settings(); c=build_provider_config(PROVIDER_DESCRIPTORS['open_router'], s); "
+        "from config.provider_catalog import PROVIDER_CATALOG; "
+        "from providers.registry import build_provider_config; "
+        "s=Settings(); c=build_provider_config(PROVIDER_CATALOG['open_router'], s); "
         "print(c.proxy); print(c.http_read_timeout); "
         "print(c.http_connect_timeout); print(c.http_write_timeout)"
     )
@@ -145,7 +147,7 @@ def test_provider_registry_e2e() -> None:
         lm_studio_base_url="http://localhost:1234/v1",
         llamacpp_base_url="http://localhost:8080/v1",
     )
-    for descriptor in PROVIDER_DESCRIPTORS.values():
+    for descriptor in PROVIDER_CATALOG.values():
         config = build_provider_config(descriptor, settings)
         assert config.base_url
         assert config.api_key

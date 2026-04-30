@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import Any
 
+from config.provider_catalog import OPENROUTER_DEFAULT_BASE
 from core.anthropic import append_request_id, iter_provider_stream_error_sse_events
 from core.anthropic.native_sse_block_policy import (
     NativeSseBlockPolicyState,
@@ -14,7 +15,6 @@ from core.anthropic.native_sse_block_policy import (
 )
 from providers.anthropic_messages import AnthropicMessagesTransport, StreamChunkMode
 from providers.base import ProviderConfig
-from providers.defaults import OPENROUTER_DEFAULT_BASE
 from providers.rate_limit import ProviderRateLimiter
 
 from .request import build_request_body

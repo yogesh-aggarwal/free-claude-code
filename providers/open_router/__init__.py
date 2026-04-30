@@ -1,6 +1,6 @@
 """OpenRouter provider - Anthropic-compatible native transport."""
 
-from providers.defaults import OPENROUTER_DEFAULT_BASE
+from config.provider_catalog import OPENROUTER_DEFAULT_BASE
 
 from .client import OpenRouterProvider
 
