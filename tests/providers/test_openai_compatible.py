@@ -1,6 +1,5 @@
 """Tests for openai_compatible provider."""
 
-import openai
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -45,9 +44,13 @@ def _make_bad_request_error(message: str) -> Exception:
 
         response = Response(
             status_code=400,
-            request=Request("POST", "http://test/openai_compatible/v1/chat/completions"),
+            request=Request(
+                "POST", "http://test/openai_compatible/v1/chat/completions"
+            ),
         )
-        return openai.BadRequestError(message, response=response, body={"error": {"message": message}})
+        return openai.BadRequestError(
+            message, response=response, body={"error": {"message": message}}
+        )
     except ImportError:
         # Fallback generic exception
         return Exception(f"400: {message}")
@@ -173,7 +176,9 @@ async def test_build_request_body_thinking_disabled_globally(provider_config):
 
 
 @pytest.mark.asyncio
-async def test_build_request_body_thinking_disabled_per_request(openai_compatible_provider):
+async def test_build_request_body_thinking_disabled_per_request(
+    openai_compatible_provider,
+):
     """When request specifies thinking disabled, omit reasoning fields."""
     req = MockRequest()
     req.thinking = MagicMock(enabled=False)
@@ -216,7 +221,9 @@ async def test_list_model_ids(openai_compatible_provider):
         MagicMock(id="gpt-3.5-turbo"),
         MagicMock(id="anthropic/claude-3-opus"),
     ]
-    openai_compatible_provider._client.models.list = AsyncMock(return_value=mock_models_page)
+    openai_compatible_provider._client.models.list = AsyncMock(
+        return_value=mock_models_page
+    )
 
     model_ids = await openai_compatible_provider.list_model_ids()
 
@@ -234,13 +241,18 @@ async def test_stream_response_text(openai_compatible_provider):
 
     mock_chunk1 = MagicMock()
     mock_chunk1.choices = [
-        MagicMock(delta=MagicMock(content="Hello", reasoning_content=None), finish_reason=None)
+        MagicMock(
+            delta=MagicMock(content="Hello", reasoning_content=None), finish_reason=None
+        )
     ]
     mock_chunk1.usage = None
 
     mock_chunk2 = MagicMock()
     mock_chunk2.choices = [
-        MagicMock(delta=MagicMock(content=" World", reasoning_content=None), finish_reason="stop")
+        MagicMock(
+            delta=MagicMock(content=" World", reasoning_content=None),
+            finish_reason="stop",
+        )
     ]
     mock_chunk2.usage = MagicMock(completion_tokens=10)
 
@@ -249,7 +261,9 @@ async def test_stream_response_text(openai_compatible_provider):
         yield mock_chunk2
 
     with patch.object(
-        openai_compatible_provider._client.chat.completions, "create", new_callable=AsyncMock
+        openai_compatible_provider._client.chat.completions,
+        "create",
+        new_callable=AsyncMock,
     ) as mock_create:
         mock_create.return_value = mock_stream()
         events = [e async for e in openai_compatible_provider.stream_response(req)]
@@ -271,7 +285,8 @@ async def test_stream_response_thinking_reasoning_content(openai_compatible_prov
     mock_chunk = MagicMock()
     mock_chunk.choices = [
         MagicMock(
-            delta=MagicMock(content=None, reasoning_content="I'm reasoning..."), finish_reason=None
+            delta=MagicMock(content=None, reasoning_content="I'm reasoning..."),
+            finish_reason=None,
         )
     ]
     mock_chunk.usage = None
@@ -280,7 +295,9 @@ async def test_stream_response_thinking_reasoning_content(openai_compatible_prov
         yield mock_chunk
 
     with patch.object(
-        openai_compatible_provider._client.chat.completions, "create", new_callable=AsyncMock
+        openai_compatible_provider._client.chat.completions,
+        "create",
+        new_callable=AsyncMock,
     ) as mock_create:
         mock_create.return_value = mock_stream()
         events = [e async for e in openai_compatible_provider.stream_response(req)]
@@ -331,12 +348,16 @@ async def test_stream_response_http_error(openai_compatible_provider):
     # Use a bad request error to simulate upstream failure
     error = _make_bad_request_error("Invalid parameters")
     with patch.object(
-        openai_compatible_provider._client.chat.completions, "create", new_callable=AsyncMock
+        openai_compatible_provider._client.chat.completions,
+        "create",
+        new_callable=AsyncMock,
     ) as mock_create:
         mock_create.side_effect = error
         events = [e async for e in openai_compatible_provider.stream_response(req)]
 
-    assert_canonical_stream_error_envelope(events, user_message_substr="Invalid request sent to provider")
+    assert_canonical_stream_error_envelope(
+        events, user_message_substr="Invalid request sent to provider"
+    )
 
 
 @pytest.mark.asyncio
@@ -344,14 +365,18 @@ async def test_stream_response_network_error(openai_compatible_provider):
     """Network errors are caught and emitted as SSE error events."""
     req = MockRequest()
     with patch.object(
-        openai_compatible_provider._client.chat.completions, "create", new_callable=AsyncMock
+        openai_compatible_provider._client.chat.completions,
+        "create",
+        new_callable=AsyncMock,
     ) as mock_create:
         mock_create.side_effect = Exception("Connection refused")
         events = [e async for e in openai_compatible_provider.stream_response(req)]
 
     event_text = "".join(events)
     assert "Connection refused" in event_text
-    assert_canonical_stream_error_envelope(events, user_message_substr="Connection refused")
+    assert_canonical_stream_error_envelope(
+        events, user_message_substr="Connection refused"
+    )
 
 
 # ==================== Cleanup ====================
