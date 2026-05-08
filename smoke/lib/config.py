@@ -18,10 +18,7 @@ DEFAULT_TARGETS = frozenset(
         "clients",
         "config",
         "extensibility",
-        "llamacpp",
-        "lmstudio",
         "messaging",
-        "ollama",
         "providers",
         "rate_limit",
         "tools",
@@ -39,11 +36,6 @@ SECRET_KEY_PARTS = ("KEY", "TOKEN", "SECRET", "WEBHOOK", "AUTH")
 
 PROVIDER_SMOKE_DEFAULT_MODELS: dict[str, str] = {
     "nvidia_nim": "nvidia_nim/z-ai/glm4.7",
-    "open_router": "open_router/stepfun/step-3.5-flash:free",
-    "deepseek": "deepseek/deepseek-v4-pro",
-    "lmstudio": "lmstudio/local-model",
-    "llamacpp": "llamacpp/local-model",
-    "ollama": "ollama/llama3.1",
 }
 
 
@@ -58,9 +50,6 @@ TARGET_REQUIRED_ENV: dict[str, tuple[str, ...]] = {
     "providers": ("configured provider credentials/endpoints or FCC_SMOKE_MODEL_*",),
     "rate_limit": ("configured provider model",),
     "tools": ("configured tool-capable provider model",),
-    "lmstudio": ("LM_STUDIO_BASE_URL with a running LM Studio server",),
-    "llamacpp": ("LLAMACPP_BASE_URL with a running llama-server",),
-    "ollama": ("OLLAMA_BASE_URL with a running Ollama server",),
     "telegram": (
         "TELEGRAM_BOT_TOKEN",
         "ALLOWED_TELEGRAM_USER_ID or FCC_SMOKE_TELEGRAM_CHAT_ID",
@@ -175,16 +164,8 @@ class SmokeConfig:
     def has_provider_configuration(self, provider: str) -> bool:
         if provider == "nvidia_nim":
             return bool(self.settings.nvidia_nim_api_key.strip())
-        if provider == "open_router":
-            return bool(self.settings.open_router_api_key.strip())
-        if provider == "deepseek":
-            return bool(self.settings.deepseek_api_key.strip())
-        if provider == "lmstudio":
-            return bool(self.settings.lm_studio_base_url.strip())
-        if provider == "llamacpp":
-            return bool(self.settings.llamacpp_base_url.strip())
-        if provider == "ollama":
-            return bool(self.settings.ollama_base_url.strip())
+        if provider == "openai_compatible":
+            return bool(self.settings.openai_compatible_base_url.strip())
         return False
 
 

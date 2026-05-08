@@ -13,16 +13,6 @@ TransportType = Literal["openai_chat", "anthropic_messages"]
 
 # Default upstream base URLs (also re-exported via :mod:`providers.defaults`)
 NVIDIA_NIM_DEFAULT_BASE = "https://integrate.api.nvidia.com/v1"
-KIMI_DEFAULT_BASE = "https://api.moonshot.ai/v1"
-# DeepSeek Anthropic-compatible Messages API (not OpenAI ``/v1`` chat completions).
-DEEPSEEK_ANTHROPIC_DEFAULT_BASE = "https://api.deepseek.com/anthropic"
-# Historical export name: DeepSeek upstream is the native Anthropic path above.
-DEEPSEEK_DEFAULT_BASE = DEEPSEEK_ANTHROPIC_DEFAULT_BASE
-OPENROUTER_DEFAULT_BASE = "https://openrouter.ai/api/v1"
-LMSTUDIO_DEFAULT_BASE = "http://localhost:1234/v1"
-LLAMACPP_DEFAULT_BASE = "http://localhost:8080/v1"
-OLLAMA_DEFAULT_BASE = "http://localhost:11434"
-
 # OpenAI-compatible generic provider (LiteLLM, vLLM, etc.)
 OPENAI_COMPATIBLE_DEFAULT_BASE = "http://localhost:4000/v1"
 
@@ -54,80 +44,18 @@ PROVIDER_CATALOG: dict[str, ProviderDescriptor] = {
         proxy_attr="nvidia_nim_proxy",
         capabilities=("chat", "streaming", "tools", "thinking", "rate_limit"),
     ),
-    "open_router": ProviderDescriptor(
-        provider_id="open_router",
-        transport_type="anthropic_messages",
-        credential_env="OPENROUTER_API_KEY",
-        credential_url="https://openrouter.ai/keys",
-        credential_attr="open_router_api_key",
-        default_base_url=OPENROUTER_DEFAULT_BASE,
-        proxy_attr="open_router_proxy",
-        capabilities=("chat", "streaming", "tools", "thinking", "native_anthropic"),
+    "openai_compatible": ProviderDescriptor(
+        provider_id="openai_compatible",
+        transport_type="openai_chat",
+        credential_env="OPENAI_COMPATIBLE_API_KEY",
+        credential_url=None,
+        credential_attr="openai_compatible_api_key",
+        default_base_url=OPENAI_COMPATIBLE_DEFAULT_BASE,
+        base_url_attr="openai_compatible_base_url",
+        proxy_attr="openai_compatible_proxy",
+        capabilities=("chat", "streaming", "tools", "thinking"),
     ),
-    "deepseek": ProviderDescriptor(
-        provider_id="deepseek",
-        transport_type="anthropic_messages",
-        credential_env="DEEPSEEK_API_KEY",
-        credential_url="https://platform.deepseek.com/api_keys",
-        credential_attr="deepseek_api_key",
-        default_base_url=DEEPSEEK_ANTHROPIC_DEFAULT_BASE,
-        capabilities=("chat", "streaming", "tools", "thinking", "native_anthropic"),
-    ),
-    "lmstudio": ProviderDescriptor(
-        provider_id="lmstudio",
-        transport_type="anthropic_messages",
-        static_credential="lm-studio",
-        default_base_url=LMSTUDIO_DEFAULT_BASE,
-        base_url_attr="lm_studio_base_url",
-        proxy_attr="lmstudio_proxy",
-        capabilities=("chat", "streaming", "tools", "native_anthropic", "local"),
-    ),
-    "llamacpp": ProviderDescriptor(
-        provider_id="llamacpp",
-        transport_type="anthropic_messages",
-        static_credential="llamacpp",
-        default_base_url=LLAMACPP_DEFAULT_BASE,
-        base_url_attr="llamacpp_base_url",
-        proxy_attr="llamacpp_proxy",
-        capabilities=("chat", "streaming", "tools", "native_anthropic", "local"),
-    ),
-    "ollama": ProviderDescriptor(
-        provider_id="ollama",
-        transport_type="anthropic_messages",
-        static_credential="ollama",
-        default_base_url=OLLAMA_DEFAULT_BASE,
-        base_url_attr="ollama_base_url",
-        capabilities=(
-            "chat",
-            "streaming",
-            "tools",
-            "thinking",
-            "native_anthropic",
-            "local",
-        ),
-    ),
-     "kimi": ProviderDescriptor(
-         provider_id="kimi",
-         transport_type="openai_chat",
-         credential_env="KIMI_API_KEY",
-         credential_url="https://platform.moonshot.cn/console/api-keys",
-         credential_attr="kimi_api_key",
-         default_base_url=KIMI_DEFAULT_BASE,
-         proxy_attr="kimi_proxy",
-         capabilities=("chat", "streaming", "tools"),
-     ),
-     "openai_compatible": ProviderDescriptor(
-         provider_id="openai_compatible",
-         transport_type="openai_chat",
-         credential_env="OPENAI_COMPATIBLE_API_KEY",
-         credential_url=None,
-         credential_attr="openai_compatible_api_key",
-         default_base_url=OPENAI_COMPATIBLE_DEFAULT_BASE,
-         base_url_attr="openai_compatible_base_url",
-         proxy_attr="openai_compatible_proxy",
-         capabilities=("chat", "streaming", "tools", "thinking"),
-     ),
- }
+}
 
 # Order matches docs / historical error text; must match PROVIDER_CATALOG keys.
 SUPPORTED_PROVIDER_IDS: tuple[str, ...] = tuple(PROVIDER_CATALOG.keys())

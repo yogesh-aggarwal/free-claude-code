@@ -38,42 +38,6 @@ def _create_nvidia_nim(config: ProviderConfig, settings: Settings) -> BaseProvid
     return NvidiaNimProvider(config, nim_settings=settings.nim)
 
 
-def _create_open_router(config: ProviderConfig, _settings: Settings) -> BaseProvider:
-    from providers.open_router import OpenRouterProvider
-
-    return OpenRouterProvider(config)
-
-
-def _create_deepseek(config: ProviderConfig, _settings: Settings) -> BaseProvider:
-    from providers.deepseek import DeepSeekProvider
-
-    return DeepSeekProvider(config)
-
-
-def _create_lmstudio(config: ProviderConfig, _settings: Settings) -> BaseProvider:
-    from providers.lmstudio import LMStudioProvider
-
-    return LMStudioProvider(config)
-
-
-def _create_llamacpp(config: ProviderConfig, _settings: Settings) -> BaseProvider:
-    from providers.llamacpp import LlamaCppProvider
-
-    return LlamaCppProvider(config)
-
-
-def _create_ollama(config: ProviderConfig, _settings: Settings) -> BaseProvider:
-    from providers.ollama import OllamaProvider
-
-    return OllamaProvider(config)
-
-
-def _create_kimi(config: ProviderConfig, _settings: Settings) -> BaseProvider:
-    from providers.kimi import KimiProvider
-
-    return KimiProvider(config)
-
-
 def _create_openai_compatible(config: ProviderConfig, _settings: Settings) -> BaseProvider:
     from providers.openai_compatible import OpenAICompatibleProvider
     return OpenAICompatibleProvider(config)
@@ -81,12 +45,6 @@ def _create_openai_compatible(config: ProviderConfig, _settings: Settings) -> Ba
 
 PROVIDER_FACTORIES: dict[str, ProviderFactory] = {
     "nvidia_nim": _create_nvidia_nim,
-    "open_router": _create_open_router,
-    "deepseek": _create_deepseek,
-    "lmstudio": _create_lmstudio,
-    "llamacpp": _create_llamacpp,
-    "ollama": _create_ollama,
-    "kimi": _create_kimi,
     "openai_compatible": _create_openai_compatible,
 }
 

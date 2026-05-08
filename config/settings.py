@@ -106,15 +106,6 @@ def _removed_env_var_message(model_config: Mapping[str, Any]) -> str | None:
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    # ==================== OpenRouter Config ====================
-    open_router_api_key: str = Field(default="", validation_alias="OPENROUTER_API_KEY")
-
-    # ==================== DeepSeek Config ====================
-    deepseek_api_key: str = Field(default="", validation_alias="DEEPSEEK_API_KEY")
-
-    # ==================== Kimi Config ====================
-    kimi_api_key: str = Field(default="", validation_alias="KIMI_API_KEY")
-
     # ==================== OpenAI-Compatible Config ====================
     # Generic provider for any OpenAI-compatible endpoint (LiteLLM, vLLM, etc.)
     openai_compatible_api_key: str = Field(
@@ -142,24 +133,6 @@ class Settings(BaseSettings):
     # ==================== NVIDIA NIM Config ====================
     nvidia_nim_api_key: str = ""
 
-    # ==================== LM Studio Config ====================
-    lm_studio_base_url: str = Field(
-        default="http://localhost:1234/v1",
-        validation_alias="LM_STUDIO_BASE_URL",
-    )
-
-    # ==================== Llama.cpp Config ====================
-    llamacpp_base_url: str = Field(
-        default="http://localhost:8080/v1",
-        validation_alias="LLAMACPP_BASE_URL",
-    )
-
-    # ==================== Ollama Config ====================
-    ollama_base_url: str = Field(
-        default="http://localhost:11434",
-        validation_alias="OLLAMA_BASE_URL",
-    )
-
     # ==================== Model ====================
     # All Claude model requests are mapped to this single model (fallback)
     # Format: provider_type/model/name
@@ -173,10 +146,9 @@ class Settings(BaseSettings):
 
     # ==================== Per-Provider Proxy ====================
     nvidia_nim_proxy: str = Field(default="", validation_alias="NVIDIA_NIM_PROXY")
-    open_router_proxy: str = Field(default="", validation_alias="OPENROUTER_PROXY")
-    lmstudio_proxy: str = Field(default="", validation_alias="LMSTUDIO_PROXY")
-    llamacpp_proxy: str = Field(default="", validation_alias="LLAMACPP_PROXY")
-    kimi_proxy: str = Field(default="", validation_alias="KIMI_PROXY")
+    openai_compatible_proxy: str = Field(
+        default="", validation_alias="OPENAI_COMPATIBLE_PROXY"
+    )
 
     # ==================== Provider Rate Limiting ====================
     provider_rate_limit: int = Field(default=40, validation_alias="PROVIDER_RATE_LIMIT")
@@ -388,16 +360,6 @@ class Settings(BaseSettings):
                     f"Invalid URL scheme in web_fetch_allowed_schemes: {scheme!r}"
                 )
         return ",".join(schemes)
-
-    @field_validator("ollama_base_url")
-    @classmethod
-    def validate_ollama_base_url(cls, v: str) -> str:
-        if v.rstrip("/").endswith("/v1"):
-            raise ValueError(
-                "OLLAMA_BASE_URL must be the Ollama root URL for native Anthropic "
-                "messages, e.g. http://localhost:11434 (without /v1)."
-            )
-        return v
 
     @field_validator("model", "model_opus", "model_sonnet", "model_haiku")
     @classmethod
