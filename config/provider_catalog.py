@@ -23,6 +23,9 @@ LMSTUDIO_DEFAULT_BASE = "http://localhost:1234/v1"
 LLAMACPP_DEFAULT_BASE = "http://localhost:8080/v1"
 OLLAMA_DEFAULT_BASE = "http://localhost:11434"
 
+# OpenAI-compatible generic provider (LiteLLM, vLLM, etc.)
+OPENAI_COMPATIBLE_DEFAULT_BASE = "http://localhost:4000/v1"
+
 
 @dataclass(frozen=True, slots=True)
 class ProviderDescriptor:
@@ -103,17 +106,28 @@ PROVIDER_CATALOG: dict[str, ProviderDescriptor] = {
             "local",
         ),
     ),
-    "kimi": ProviderDescriptor(
-        provider_id="kimi",
-        transport_type="openai_chat",
-        credential_env="KIMI_API_KEY",
-        credential_url="https://platform.moonshot.cn/console/api-keys",
-        credential_attr="kimi_api_key",
-        default_base_url=KIMI_DEFAULT_BASE,
-        proxy_attr="kimi_proxy",
-        capabilities=("chat", "streaming", "tools"),
-    ),
-}
+     "kimi": ProviderDescriptor(
+         provider_id="kimi",
+         transport_type="openai_chat",
+         credential_env="KIMI_API_KEY",
+         credential_url="https://platform.moonshot.cn/console/api-keys",
+         credential_attr="kimi_api_key",
+         default_base_url=KIMI_DEFAULT_BASE,
+         proxy_attr="kimi_proxy",
+         capabilities=("chat", "streaming", "tools"),
+     ),
+     "openai_compatible": ProviderDescriptor(
+         provider_id="openai_compatible",
+         transport_type="openai_chat",
+         credential_env="OPENAI_COMPATIBLE_API_KEY",
+         credential_url=None,
+         credential_attr="openai_compatible_api_key",
+         default_base_url=OPENAI_COMPATIBLE_DEFAULT_BASE,
+         base_url_attr="openai_compatible_base_url",
+         proxy_attr="openai_compatible_proxy",
+         capabilities=("chat", "streaming", "tools", "thinking"),
+     ),
+ }
 
 # Order matches docs / historical error text; must match PROVIDER_CATALOG keys.
 SUPPORTED_PROVIDER_IDS: tuple[str, ...] = tuple(PROVIDER_CATALOG.keys())
