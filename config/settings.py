@@ -115,6 +115,18 @@ class Settings(BaseSettings):
     # ==================== Kimi Config ====================
     kimi_api_key: str = Field(default="", validation_alias="KIMI_API_KEY")
 
+    # ==================== OpenAI-Compatible Config ====================
+    # Generic provider for any OpenAI-compatible endpoint (LiteLLM, vLLM, etc.)
+    openai_compatible_api_key: str = Field(
+        default="", validation_alias="OPENAI_COMPATIBLE_API_KEY"
+    )
+    openai_compatible_base_url: str = Field(
+        default="", validation_alias="OPENAI_COMPATIBLE_BASE_URL"
+    )
+    openai_compatible_proxy: str = Field(
+        default="", validation_alias="OPENAI_COMPATIBLE_PROXY"
+    )
+
     # ==================== Messaging Platform Selection ====================
     # Valid: "telegram" | "discord" | "none"
     messaging_platform: str = Field(
