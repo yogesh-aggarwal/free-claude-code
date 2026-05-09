@@ -33,7 +33,6 @@ class FeatureCoverage:
 
 
 README_FEATURES: tuple[str, ...] = (
-    "zero_cost_provider_access",
     "drop_in_claude_code_replacement",
     "provider_matrix",
     "per_model_mapping",
@@ -52,17 +51,6 @@ README_FEATURES: tuple[str, ...] = (
 
 
 FEATURE_INVENTORY: tuple[FeatureCoverage, ...] = (
-    FeatureCoverage(
-        "zero_cost_provider_access",
-        "Configured provider accepts real conversation turns",
-        "readme",
-        ("tests/api/test_dependencies.py", "tests/providers/"),
-        ("test_configured_provider_models_stream_successfully",),
-        ("test_provider_text_multiturn_e2e",),
-        ("providers",),
-        ("configured provider credentials or local provider endpoint",),
-        "missing providers are missing_env unless FCC_ALLOW_NO_PROVIDER_SMOKE=1",
-    ),
     FeatureCoverage(
         "drop_in_claude_code_replacement",
         "Claude-compatible API, CLI, and editor protocol flows work",
@@ -118,7 +106,8 @@ FEATURE_INVENTORY: tuple[FeatureCoverage, ...] = (
         "readme",
         (
             "tests/contracts/test_stream_contracts.py",
-            "tests/providers/test_open_router.py",
+            "tests/providers/test_converter.py",
+            "tests/providers/test_nvidia_nim_request.py",
         ),
         (),
         (
@@ -323,20 +312,6 @@ FEATURE_INVENTORY: tuple[FeatureCoverage, ...] = (
         "always runnable with isolated env files",
     ),
     FeatureCoverage(
-        "lmstudio_endpoint",
-        "LM Studio native messages and local no-key operation work when running",
-        "public_surface",
-        (
-            "tests/providers/test_lmstudio.py",
-            "tests/providers/test_anthropic_messages.py",
-        ),
-        ("test_lmstudio_models_endpoint_when_available",),
-        ("test_lmstudio_native_messages_e2e",),
-        ("lmstudio",),
-        ("LM_STUDIO_BASE_URL with running LM Studio server",),
-        "skip when local upstream is unavailable",
-    ),
-    FeatureCoverage(
         "llamacpp_endpoint",
         "llama.cpp native messages and local no-key operation work when running",
         "public_surface",
@@ -348,17 +323,6 @@ FEATURE_INVENTORY: tuple[FeatureCoverage, ...] = (
         ("test_llamacpp_native_messages_e2e",),
         ("llamacpp",),
         ("LLAMACPP_BASE_URL with running llama-server",),
-        "skip when local upstream is unavailable",
-    ),
-    FeatureCoverage(
-        "ollama_endpoint",
-        "Ollama native Anthropic messages and local no-key operation work when running",
-        "public_surface",
-        ("tests/providers/test_ollama.py",),
-        ("test_ollama_models_endpoint_when_available",),
-        ("test_ollama_native_messages_e2e",),
-        ("ollama",),
-        ("OLLAMA_BASE_URL with running Ollama server",),
         "skip when local upstream is unavailable",
     ),
     FeatureCoverage(

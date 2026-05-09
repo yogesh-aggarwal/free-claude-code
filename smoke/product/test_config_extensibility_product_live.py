@@ -19,7 +19,7 @@ pytestmark = [pytest.mark.live]
 def test_env_precedence_e2e(smoke_config: SmokeConfig, tmp_path) -> None:
     env_file = tmp_path / "product.env"
     env_file.write_text(
-        'MODEL="open_router/test/model"\nANTHROPIC_AUTH_TOKEN="dotenv-token"\n',
+        'MODEL="nvidia_nim/test/model"\nANTHROPIC_AUTH_TOKEN="dotenv-token"\n',
         encoding="utf-8",
     )
     env = os.environ.copy()
